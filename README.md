@@ -10,9 +10,8 @@ Just run the commands in the next section
 
 First Run these commands
 ```
-$ sudo apt install build-essential libevent
-$ gcc http_serve.c -levent -o blockage_server
-$ ./blockage_server
+$ sudo apt install build-essential libevent-dev wiringPi
+$ make
 ```
 
 You next need to find out the ip address of the Raspberry Pi. If you want to access the ui it would be localhost. Otherwise go to the command line andtype `$ ip a`. You should see its ip under the connected network interface 
