@@ -12,4 +12,4 @@ function get_sensor_state(){
 
 setInterval(() => {
   get_sensor_state(); 
-}, 500);
+}, 5);

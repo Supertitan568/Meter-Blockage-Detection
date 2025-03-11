@@ -8,6 +8,8 @@
 #include <event2/event.h>
 #include <event2/http.h>
 
+#include "sensor.h"
+
 static struct table_entry {
   const char* file_extention;
   const char* mime_type;
@@ -99,11 +101,17 @@ static void handle_http_request(struct evhttp_request *req, void *ctx){
   // If this is out on the open internet make sure to sanitize the URI
   // Oh well I'll do it later
           
-  printf("Requested %s\n", decoded_path);  
   struct evbuffer* reply = evbuffer_new();
   if(strcmp(decoded_path, "/sensor") == 0){
     // We really just need to send a bool here
-    evbuffer_add_printf(reply, "1"); 
+    if(is_movement()){
+	printf("There was movement");
+    	evbuffer_add_printf(reply, "1");
+    }
+    else {
+	printf("There was no movement");
+    	evbuffer_add_printf(reply, "0");
+    } 	
     evhttp_send_reply(req, HTTP_OK, NULL, reply);
   }
   else{
@@ -136,6 +144,7 @@ static void signal_cb(evutil_socket_t fd, short event, void *arg){
 }
 
 int main() {
+  sensor_setup();
   ev_uint16_t http_port = 8080;
   char* http_addr = "0.0.0.0";
   struct event_base *base;
